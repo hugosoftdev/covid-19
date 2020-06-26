@@ -3,8 +3,8 @@ const r = React;
 const rd = ReactDOM;
 const e = r.createElement;
 
-document.addEventListener('DOMContentLoaded', () => {
-  rd.render(e(App), document.getElementById('root'));
+document.addEventListener("DOMContentLoaded", () => {
+  rd.render(e(App), document.getElementById("root"));
 });
 
 function App() {
@@ -12,7 +12,8 @@ function App() {
   const defaultSelectedTypes = covidFilters.selectedTypes.defaultValue;
   const defaultSelectedRegions = covidFilters.selectedRegions.defaultValue;
   const defaultUseLogScale = covidFilters.useLogScale.defaultValue;
-  const defaultCountrySearchQuery = covidFilters.countrySearchQuery.defaultValue;
+  const defaultCountrySearchQuery =
+    covidFilters.countrySearchQuery.defaultValue;
   const defaultDataSort = covidFilters.dataSort.defaultValue;
   const defaultDataSortDirection = covidFilters.dataSortDirection.defaultValue;
 
@@ -22,12 +23,18 @@ function App() {
 
   const [groupByCountry, setGroupByCountry] = r.useState(defaultGroupByCountry);
   const [selectedTypes, setSelectedTypes] = r.useState(defaultSelectedTypes);
-  const [selectedRegions, setSelectedRegions] = r.useState(defaultSelectedRegions);
+  const [selectedRegions, setSelectedRegions] = r.useState(
+    defaultSelectedRegions
+  );
   const [useLogScale, setUseLogScale] = r.useState(defaultUseLogScale);
-  const [countrySearchQuery, setCountrySearchQuery] = r.useState(defaultCountrySearchQuery);
+  const [countrySearchQuery, setCountrySearchQuery] = r.useState(
+    defaultCountrySearchQuery
+  );
 
   const [dataSort, setDataSort] = r.useState(defaultDataSort);
-  const [dataSortDirection, setDataSortDirection] = r.useState(defaultDataSortDirection);
+  const [dataSortDirection, setDataSortDirection] = r.useState(
+    defaultDataSortDirection
+  );
 
   const onFiltersReset = () => {
     setGroupByCountry(defaultGroupByCountry);
@@ -43,12 +50,21 @@ function App() {
   const onRegionChange = (changedRegionKey) => {
     let newRegions;
     if (selectedRegions.includes(changedRegionKey)) {
-      newRegions = [...selectedRegions.filter(regionKey => regionKey !== changedRegionKey)];
+      newRegions = [
+        ...selectedRegions.filter(
+          (regionKey) => regionKey !== changedRegionKey
+        ),
+      ];
       if (!newRegions.length) {
         newRegions = [covidCountries.all.key];
       }
     } else {
-      newRegions = [...selectedRegions.filter(regionKey => regionKey !== covidCountries.all.key), changedRegionKey];
+      newRegions = [
+        ...selectedRegions.filter(
+          (regionKey) => regionKey !== covidCountries.all.key
+        ),
+        changedRegionKey,
+      ];
     }
     setSelectedRegions(newRegions);
     filterToUrl(covidFilters.selectedRegions.key, newRegions);
@@ -69,7 +85,9 @@ function App() {
   const onTypeChange = (dataTypeKey) => {
     let newSelectedTypes;
     if (selectedTypes.includes(dataTypeKey)) {
-      newSelectedTypes = [...selectedTypes.filter(dataType => dataType !== dataTypeKey)];
+      newSelectedTypes = [
+        ...selectedTypes.filter((dataType) => dataType !== dataTypeKey),
+      ];
     } else {
       newSelectedTypes = [...selectedTypes, dataTypeKey];
     }
@@ -78,7 +96,7 @@ function App() {
   };
 
   const onCountrySearch = (query) => {
-    const q = query || '';
+    const q = query || "";
     setCountrySearchQuery(q);
   };
 
@@ -96,7 +114,11 @@ function App() {
         setCovidData(data);
         setCovidDataByCountries(groupCovidDataByCountries(data));
       })
-      .catch(() => setErrorMessage('Cannot fetch the statistics data. It might be a network issue. Try to refresh the page.'));
+      .catch(() =>
+        setErrorMessage(
+          "Cannot fetch the statistics data. It might be a network issue. Try to refresh the page."
+        )
+      );
   }, []);
 
   r.useEffect(() => {
@@ -123,12 +145,14 @@ function App() {
     }
 
     if (populatedFilters.hasOwnProperty(covidFilters.dataSortDirection.key)) {
-      setDataSortDirection(populatedFilters[covidFilters.dataSortDirection.key]);
+      setDataSortDirection(
+        populatedFilters[covidFilters.dataSortDirection.key]
+      );
     }
   }, []);
 
   if (errorMessage) {
-    return e(ErrorMessage, {errorMessage});
+    return e(ErrorMessage, { errorMessage });
   }
   if (!covidData || !covidDataByCountries) {
     return e(Spinner);
@@ -136,81 +160,130 @@ function App() {
 
   const covidDataInUse = groupByCountry ? covidDataByCountries : covidData;
 
-  return (
-    e('div', null,
-      e('div', {className: 'mb-2'},
-        e(LastUpdatedDate, {covidData})
-      ),
-      e('div', {className: 'mb-1'},
-        e(DataTypes, {covidData: covidDataInUse, selectedRegions, selectedTypes, onTypeChange})
-      ),
-      e('div', {className: 'mb-4'},
-        e(CovidChart, {covidData: covidDataInUse, regions: selectedRegions, selectedTypes, useLogScale})
-      ),
-      e('div', {className: 'mb-0'},
-        e(TableFilters, {
-          onFiltersReset,
-          groupByCountry,
-          onGroupByCountries,
-          countrySearchQuery,
-          onCountrySearch,
-          useLogScale,
-          onUseLogScale,
-        })
-      ),
-      e('div', {className: 'mb-4'},
-        e(RegionsTable, {
-          groupByCountry,
-          covidData: covidDataInUse,
-          selectedRegions,
-          onRegionChange,
-          countrySearchQuery,
-          dataSort,
-          dataSortDirection,
-          onDataSort,
-        })
-      ),
+  return e(
+    "div",
+    null,
+    e("div", { className: "mb-2" }, e(LastUpdatedDate, { covidData })),
+    e(
+      "div",
+      { className: "mb-1" },
+      e(DataTypes, {
+        covidData: covidDataInUse,
+        selectedRegions,
+        selectedTypes,
+        onTypeChange,
+      })
+    ),
+    e(
+      "div",
+      { className: "mb-4" },
+      e(CovidChart, {
+        covidData: covidDataInUse,
+        regions: selectedRegions,
+        selectedTypes,
+        useLogScale,
+      })
+    ),
+    e(
+      "div",
+      { className: "mb-0" },
+      e(TableFilters, {
+        onFiltersReset,
+        groupByCountry,
+        onGroupByCountries,
+        countrySearchQuery,
+        onCountrySearch,
+        useLogScale,
+        onUseLogScale,
+      })
+    ),
+    e(
+      "div",
+      { className: "mb-4" },
+      e(RegionsTable, {
+        groupByCountry,
+        covidData: covidDataInUse,
+        selectedRegions,
+        onRegionChange,
+        countrySearchQuery,
+        dataSort,
+        dataSortDirection,
+        onDataSort,
+      })
     )
   );
 }
 
-function LastUpdatedDate({covidData}) {
+function LastUpdatedDate({ covidData }) {
   const lastUpdatedDate = getLastUpdatedDate(covidData);
-  return e('small', {className: 'text-muted'},
-    'Last updated: ',
-    e('span', {className: 'badge badge-dark'}, lastUpdatedDate)
+  return e(
+    "small",
+    { className: "text-muted" },
+    "Last updated: ",
+    e("span", { className: "badge badge-dark" }, lastUpdatedDate)
   );
 }
 
-function DataTypes({covidData, selectedRegions, selectedTypes, onTypeChange}) {
-  const dataTypes = Object.values(covidDataTypes).map(dataType => {
+function DataTypes({
+  covidData,
+  selectedRegions,
+  selectedTypes,
+  onTypeChange,
+}) {
+  const dataTypes = Object.values(covidDataTypes).map((dataType) => {
     const checked = !!selectedTypes.includes(dataType.key);
-    return e(DataType, {key: dataType.key, covidData, selectedRegions, dataType, checked, onTypeChange})
+    return e(DataType, {
+      key: dataType.key,
+      covidData,
+      selectedRegions,
+      dataType,
+      checked,
+      onTypeChange,
+    });
   });
-  return e('form', {className: 'form-inline'}, dataTypes);
+  return e("form", { className: "form-inline" }, dataTypes);
 }
 
-function DataType({covidData, selectedRegions, dataType, checked, onTypeChange}) {
+function DataType({
+  covidData,
+  selectedRegions,
+  dataType,
+  checked,
+  onTypeChange,
+}) {
   const alertClass = covidDataTypes[dataType.key].alertClass;
   const badgeClass = covidDataTypes[dataType.key].badgeClass;
   const totalCount = getTotalCount(covidData, dataType.key, selectedRegions);
   const onChange = () => {
     onTypeChange(dataType.key);
   };
-  return (
-    e('label', {className: `alert ${alertClass} mr-3 mb-3`},
-      e('div', {className: 'form-group form-check mb-0'},
-        e('input', {type: 'checkbox', className: 'form-check-input', checked, onChange}),
-        e('div', {className: 'form-check-label'},
-          dataType.title,
-          e('span', {className: `badge ${badgeClass} ml-2`}, totalCount.toLocaleString())
+  return e(
+    "label",
+    { className: `alert ${alertClass} mr-3 mb-3` },
+    e(
+      "div",
+      { className: "form-group form-check mb-0" },
+      e("input", {
+        type: "checkbox",
+        className: "form-check-input",
+        checked,
+        onChange,
+      }),
+      e(
+        "div",
+        { className: "form-check-label" },
+        dataType.title,
+        e(
+          "span",
+          { className: `badge ${badgeClass} ml-2` },
+          totalCount.toLocaleString()
         )
       )
     )
-  )
+  );
 }
 
-function CovidChart({covidData, regions, selectedTypes, useLogScale}) {
+function CovidChart({ covidData, regions, selectedTypes, useLogScale }) {
   const canvasRef = r.useRef(null);
   const chartRef = r.useRef(null);
   const [screenWidth, screenHeight] = useWindowSize();
@@ -231,17 +304,21 @@ function CovidChart({covidData, regions, selectedTypes, useLogScale}) {
     const labels = covidData.labels
       .slice(covidSchema.dateStartColumn)
       .map(formatDateLabel);
-    const linearYAxisID = 'linearYAxis';
-    const logYAxisID = 'logYAxis';
+    const linearYAxisID = "linearYAxis";
+    const logYAxisID = "logYAxis";
     const yAxesID = useLogScale ? logYAxisID : linearYAxisID;
     const datasets = [];
     regions.forEach((regionKey, regionIndex) => {
-      selectedTypes.forEach(dataTypeKey => {
+      selectedTypes.forEach((dataTypeKey) => {
         let ticks = [];
         if (regionKey === covidCountries.all.key) {
           ticks = getGlobalTicks(covidData, dataTypeKey);
         } else {
-          const regionIndex = getRegionIndexByKey(covidData, dataTypeKey, regionKey);
+          const regionIndex = getRegionIndexByKey(
+            covidData,
+            dataTypeKey,
+            regionKey
+          );
           if (regionIndex >= 0) {
             ticks = covidData.ticks[dataTypeKey][regionIndex];
           }
@@ -251,7 +328,8 @@ function CovidChart({covidData, regions, selectedTypes, useLogScale}) {
           label: `${covidDataTypes[dataTypeKey].title} (${regionKey})`,
           data: ticks.slice(covidSchema.dateStartColumn),
           borderWidth: 1,
-          borderColor: covidDataTypes[dataTypeKey].borderColor[regionIndex % paletteDepth],
+          borderColor:
+            covidDataTypes[dataTypeKey].borderColor[regionIndex % paletteDepth],
           fill: false,
           yAxisID: yAxesID,
         };
@@ -261,10 +339,10 @@ function CovidChart({covidData, regions, selectedTypes, useLogScale}) {
     if (chartRef.current) {
       chartRef.current.destroy();
     }
-    const ctx = canvasRef.current.getContext('2d');
+    const ctx = canvasRef.current.getContext("2d");
     chartRef.current = new Chart(ctx, {
-      type: 'line',
-      data: {labels, datasets},
+      type: "line",
+      data: { labels, datasets },
       options: {
         responsive: true,
         maintainAspectRatio: true,
@@ -273,18 +351,18 @@ function CovidChart({covidData, regions, selectedTypes, useLogScale}) {
           yAxes: [
             {
               id: linearYAxisID,
-              type: 'linear',
-              display: 'auto',
+              type: "linear",
+              display: "auto",
               ticks: {
                 callback: (value, index, values) => {
                   return value.toLocaleString();
-                }
-              }
+                },
+              },
             },
             {
               id: logYAxisID,
-              type: 'logarithmic',
-              display: 'auto',
+              type: "logarithmic",
+              display: "auto",
               ticks: {
                 // callback: (value, index, values) => {
                 //   const numbers = {
@@ -304,14 +382,18 @@ function CovidChart({covidData, regions, selectedTypes, useLogScale}) {
                 //   }
                 //   return null;
                 // }
-              }
+              },
             },
           ],
         },
       },
     });
   }, [useLogScale, selectedTypes, regions, aspectRatio]);
-  return e('canvas', {ref: canvasRef}, 'Your browser does not support the canvas element.');
+  return e(
+    "canvas",
+    { ref: canvasRef },
+    "Your browser does not support the canvas element."
+  );
 }
 
 function TableFilters({
@@ -328,35 +410,49 @@ function TableFilters({
     onFiltersReset();
   };
 
-  return (
-    e('form', {className: 'form-inline'},
-      e('div', {className: 'form-group mr-3 mb-2'},
-        e(CountrySearch, {countrySearchQuery, onCountrySearch})
-      ),
-      e('div', {className: 'form-group form-check mr-3 mb-2'},
-        e(Toggle, {checked: groupByCountry, onChange: onGroupByCountries, text: 'Group by countries'})
-      ),
-      e('div', {className: 'form-group form-check mr-3 mb-2'},
-        e(Toggle, {text: 'Logarithmic scale', onChange: onUseLogScale, checked: useLogScale})
-      ),
-      e('button', {className: 'btn btn-dark mb-2', onClick: onReset},
-        e('i', {className: 'fas fa-trash-alt mr-2'}),
-        'Reset Filters'
-      )
+  return e(
+    "form",
+    { className: "form-inline" },
+    e(
+      "div",
+      { className: "form-group mr-3 mb-2" },
+      e(CountrySearch, { countrySearchQuery, onCountrySearch })
+    ),
+    e(
+      "div",
+      { className: "form-group form-check mr-3 mb-2" },
+      e(Toggle, {
+        checked: groupByCountry,
+        onChange: onGroupByCountries,
+        text: "Group by countries",
+      })
+    ),
+    e(
+      "div",
+      { className: "form-group form-check mr-3 mb-2" },
+      e(Toggle, {
+        text: "Logarithmic scale",
+        onChange: onUseLogScale,
+        checked: useLogScale,
+      })
+    ),
+    e(
+      "button",
+      { className: "btn btn-dark mb-2", onClick: onReset },
+      e("i", { className: "fas fa-trash-alt mr-2" }),
+      "Reset Filters"
     )
   );
 }
 
-function CountrySearch({countrySearchQuery, onCountrySearch}) {
-  return (
-    e('input', {
-      type: 'search',
-      className: 'form-control',
-      placeholder: 'Search country',
-      onChange: (e) => onCountrySearch(e.target.value),
-      value: countrySearchQuery,
-    })
-  );
+function CountrySearch({ countrySearchQuery, onCountrySearch }) {
+  return e("input", {
+    type: "search",
+    className: "form-control",
+    placeholder: "Search country",
+    onChange: (e) => onCountrySearch(e.target.value),
+    value: countrySearchQuery,
+  });
 }
 
 function RegionsTable({
@@ -372,38 +468,82 @@ function RegionsTable({
   const onColumnSort = (columnName) => {
     if (columnName === dataSort) {
       const newDataSortDirection =
-        dataSortDirection === covidSortDirections.asc.key ? covidSortDirections.desc.key : covidSortDirections.asc.key;
+        dataSortDirection === covidSortDirections.asc.key
+          ? covidSortDirections.desc.key
+          : covidSortDirections.asc.key;
       onDataSort(columnName, newDataSortDirection);
     } else {
       onDataSort(columnName, dataSortDirection);
     }
   };
-  const tHead = (
-    e('thead', {className: 'thead-dark'},
-      e('tr', null,
-        e('th', null, ''),
-        e('th', null, ''),
-        e('th', {sortable: 'sortable', onClick: () => onColumnSort(covidSorts.country.key)},
-          groupByCountry ? 'Countries' : 'Regions',
-          e(ColumnSorter, {sortDirection: dataSort === covidSorts.country.key ? dataSortDirection : null})
-        ),
-        e('th', {sortable: 'sortable', onClick: () => onColumnSort(covidSorts.confirmed.key)},
-          covidDataTypes.confirmed.title,
-          e(ColumnSorter, {sortDirection: dataSort === covidSorts.confirmed.key ? dataSortDirection : null})
-        ),
-        e('th', {sortable: 'sortable', onClick: () => onColumnSort(covidSorts.recovered.key)},
-          covidDataTypes.recovered.title,
-          e(ColumnSorter, {sortDirection: dataSort === covidSorts.recovered.key ? dataSortDirection : null})
-        ),
-        e('th', {sortable: 'sortable', onClick: () => onColumnSort(covidSorts.deaths.key)},
-          covidDataTypes.deaths.title,
-          e(ColumnSorter, {sortDirection: dataSort === covidSorts.deaths.key ? dataSortDirection : null})
-        ),
-        e('th', {sortable: 'sortable', onClick: () => onColumnSort(covidSorts.mortality.key)},
-          'Mortality',
-          e(ColumnSorter, {sortDirection: dataSort === covidSorts.mortality.key ? dataSortDirection : null})
-        ),
+  const tHead = e(
+    "thead",
+    { className: "thead-dark" },
+    e(
+      "tr",
+      null,
+      e("th", null, ""),
+      e("th", null, ""),
+      e(
+        "th",
+        {
+          sortable: "sortable",
+          onClick: () => onColumnSort(covidSorts.country.key),
+        },
+        groupByCountry ? "Countries" : "Regions",
+        e(ColumnSorter, {
+          sortDirection:
+            dataSort === covidSorts.country.key ? dataSortDirection : null,
+        })
       ),
+      e(
+        "th",
+        {
+          sortable: "sortable",
+          onClick: () => onColumnSort(covidSorts.confirmed.key),
+        },
+        covidDataTypes.confirmed.title,
+        e(ColumnSorter, {
+          sortDirection:
+            dataSort === covidSorts.confirmed.key ? dataSortDirection : null,
+        })
+      ),
+      e(
+        "th",
+        {
+          sortable: "sortable",
+          onClick: () => onColumnSort(covidSorts.recovered.key),
+        },
+        covidDataTypes.recovered.title,
+        e(ColumnSorter, {
+          sortDirection:
+            dataSort === covidSorts.recovered.key ? dataSortDirection : null,
+        })
+      ),
+      e(
+        "th",
+        {
+          sortable: "sortable",
+          onClick: () => onColumnSort(covidSorts.deaths.key),
+        },
+        covidDataTypes.deaths.title,
+        e(ColumnSorter, {
+          sortDirection:
+            dataSort === covidSorts.deaths.key ? dataSortDirection : null,
+        })
+      ),
+      e(
+        "th",
+        {
+          sortable: "sortable",
+          onClick: () => onColumnSort(covidSorts.lethality.key),
+        },
+        "Lethality",
+        e(ColumnSorter, {
+          sortDirection:
+            dataSort === covidSorts.lethality.key ? dataSortDirection : null,
+        })
+      )
     )
   );
   const rows = getCovidRegions(covidData)
@@ -412,9 +552,7 @@ function RegionsTable({
         return true;
       }
       const escapedCountrySearchQuery = escapeRegExp(countrySearchQuery.trim());
-      return region.key.search(
-        new RegExp(escapedCountrySearchQuery, 'i')
-      ) >= 0;
+      return region.key.search(new RegExp(escapedCountrySearchQuery, "i")) >= 0;
     })
     .sort((regionA, regionB) => {
       let sortCriteriaA;
@@ -424,12 +562,12 @@ function RegionsTable({
           sortCriteriaA = regionA.key;
           sortCriteriaB = regionB.key;
           break;
-        case covidSorts.mortality.key:
-          sortCriteriaA = calculateMortality(
+        case covidSorts.lethality.key:
+          sortCriteriaA = calculateLethality(
             regionA.numbers[covidDataTypes.confirmed.key],
             regionA.numbers[covidDataTypes.deaths.key]
           );
-          sortCriteriaB = calculateMortality(
+          sortCriteriaB = calculateLethality(
             regionB.numbers[covidDataTypes.confirmed.key],
             regionB.numbers[covidDataTypes.deaths.key]
           );
@@ -448,77 +586,97 @@ function RegionsTable({
     })
     .map((region, regionIndex) => {
       const checked = !!selectedRegions.includes(region.key);
-      const confirmedNumber = region.numbers[covidDataTypes.confirmed.key] >= 0 ? region.numbers[covidDataTypes.confirmed.key] : '';
-      const recoveredNumber = region.numbers[covidDataTypes.recovered.key] >= 0 ? region.numbers[covidDataTypes.recovered.key] : '';
-      const deathsNumber = region.numbers[covidDataTypes.deaths.key] >= 0 ? region.numbers[covidDataTypes.deaths.key] : '';
+      const confirmedNumber =
+        region.numbers[covidDataTypes.confirmed.key] >= 0
+          ? region.numbers[covidDataTypes.confirmed.key]
+          : "";
+      const recoveredNumber =
+        region.numbers[covidDataTypes.recovered.key] >= 0
+          ? region.numbers[covidDataTypes.recovered.key]
+          : "";
+      const deathsNumber =
+        region.numbers[covidDataTypes.deaths.key] >= 0
+          ? region.numbers[covidDataTypes.deaths.key]
+          : "";
 
-      const mortality = calculateMortality(
+      const lethality = calculateLethality(
         region.numbers[covidDataTypes.confirmed.key],
         region.numbers[covidDataTypes.deaths.key]
       );
-      let mortalityNumber = `${mortality}%`;
+      let lethalityNumber = `${lethality}%`;
 
-      return (
-        e('tr', {key: region.key, onClick: () => onRegionChange(region.key)},
-          e('td', null, e('input', {type: 'checkbox', checked, onChange: () => {}})),
-          e('td', null, e('small', {className: 'text-muted'}, `#${regionIndex + 1}`)),
-          e('td', null, region.key),
-          e('td', null, confirmedNumber),
-          e('td', null, recoveredNumber),
-          e('td', null, deathsNumber),
-          e('td', null, e('small', {className: 'text-muted'}, mortalityNumber)),
-        )
+      return e(
+        "tr",
+        { key: region.key, onClick: () => onRegionChange(region.key) },
+        e(
+          "td",
+          null,
+          e("input", { type: "checkbox", checked, onChange: () => {} })
+        ),
+        e(
+          "td",
+          null,
+          e("small", { className: "text-muted" }, `#${regionIndex + 1}`)
+        ),
+        e("td", null, region.key),
+        e("td", null, confirmedNumber),
+        e("td", null, recoveredNumber),
+        e("td", null, deathsNumber),
+        e("td", null, e("small", { className: "text-muted" }, lethalityNumber))
       );
     });
-  const tBody = e('tbody', null, rows);
-  return (
-    e('div', null,
-      e('div', {className: 'table-responsive covid-data-table-wrapper'},
-        e('table', {className: 'table table-hover'}, tHead, tBody)
-      ),
-      e('small', {className: 'text-muted'}, '* Table is scrollable')
-    )
+  const tBody = e("tbody", null, rows);
+  return e(
+    "div",
+    null,
+    e(
+      "div",
+      { className: "table-responsive covid-data-table-wrapper" },
+      e("table", { className: "table table-hover" }, tHead, tBody)
+    ),
+    e("small", { className: "text-muted" }, "* Table is scrollable")
   );
 }
 
-function ColumnSorter({sortDirection}) {
-  const className = sortDirection ? 'ml-2' : 'ml-2 text-muted';
+function ColumnSorter({ sortDirection }) {
+  const className = sortDirection ? "ml-2" : "ml-2 text-muted";
   let sorter = null;
   if (!sortDirection) {
-    sorter = e('i', {className: 'fas fa-sort'});
+    sorter = e("i", { className: "fas fa-sort" });
   } else if (sortDirection === covidSortDirections.asc.key) {
-    sorter = e('i', {className: 'fas fa-sort-up'});
+    sorter = e("i", { className: "fas fa-sort-up" });
   } else {
-    sorter = e('i', {className: 'fas fa-sort-down'});
+    sorter = e("i", { className: "fas fa-sort-down" });
   }
-  return (
-    e('span', {className}, sorter)
-  );
+  return e("span", { className }, sorter);
 }
 
-function ErrorMessage({errorMessage}) {
-  return e('div', {className: 'alert alert-danger'}, errorMessage);
+function ErrorMessage({ errorMessage }) {
+  return e("div", { className: "alert alert-danger" }, errorMessage);
 }
 
 function Spinner() {
   return e(
-    'div', {className: 'd-flex justify-content-center mt-5 mb-5'},
-    e('div', {className: 'spinner-border'})
+    "div",
+    { className: "d-flex justify-content-center mt-5 mb-5" },
+    e("div", { className: "spinner-border" })
   );
 }
 
-function Toggle({text, checked, onChange}) {
-  return (
-    e('label', {},
-      e('div', {className: 'form-group form-check mb-0'},
-        e('input', {
-          type: 'checkbox',
-          checked: checked,
-          className: 'form-check-input',
-          onChange: (event) => onChange(event.target.checked)
-        }),
-        e('div', {className: 'form-check-label'}, text)
-      )
+function Toggle({ text, checked, onChange }) {
+  return e(
+    "label",
+    {},
+    e(
+      "div",
+      { className: "form-group form-check mb-0" },
+      e("input", {
+        type: "checkbox",
+        checked: checked,
+        className: "form-check-input",
+        onChange: (event) => onChange(event.target.checked),
+      }),
+      e("div", { className: "form-check-label" }, text)
     )
-  )
+  );
 }
